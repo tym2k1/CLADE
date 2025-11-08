@@ -3,3 +3,7 @@ torchvision
 dominate>=2.3.1
 dill
 scikit-image
+pycocotools
+numpy
+matplotlib
+opencv-python
