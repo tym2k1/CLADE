@@ -169,12 +169,21 @@ class BaseOptions():
             (0 if opt.no_instance else 1)
 
         # set gpu ids
-        str_ids = opt.gpu_ids.split(',')
+        opt_ids = opt.gpu_ids
+        if isinstance(opt_ids, str):
+            str_ids = opt_ids.split(',')
+        elif isinstance(opt_ids, int):
+            str_ids = [str(opt_ids)]  # wrap single int as a one-element list of strings
+        else:
+            # assume it's already a list of ints
+            str_ids = [str(i) for i in opt_ids]
+
         opt.gpu_ids = []
         for str_id in str_ids:
             id = int(str_id)
             if id >= 0:
                 opt.gpu_ids.append(id)
+
         if len(opt.gpu_ids) > 0:
             torch.cuda.set_device(opt.gpu_ids[0])
 
