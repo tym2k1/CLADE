@@ -5,6 +5,7 @@ spade_server_direct.py
 POST label+instance images to /infer. Preview last generated image at /.
 No temp datasets, no dataloader. Minimal in-process SPADE/CLADE usage.
 """
+import os
 import argparse
 import threading
 from pathlib import Path
@@ -53,7 +54,6 @@ class Options(BaseOptions):
         return parser
 
 def build_model():
-    import os
     os.environ['CUDA_VISIBLE_DEVICES'] = ''
 
     from options.test_options import TestOptions
@@ -129,8 +129,8 @@ def infer():
 
         im_numpy = tensor2im(generated)
         Image.fromarray(im_numpy).save('last_generated.png')
-
-        return jsonify({'status':'ok','generated':'last_generated.png'}), 200
+        generated_file = os.path.join(os.getcwd(), 'last_generated.png')
+        return jsonify({'status': 'ok', 'generated': generated_file}), 200
     finally:
         lock.release()
 
